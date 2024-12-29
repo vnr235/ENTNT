@@ -1,0 +1,53 @@
+.user-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f8ff;
+  }
+  
+  h1 {
+    color: #007bff;
+  }
+  
+  .calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .meeting-summary {
+    background-color: rgba(0, 123, 255, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .meeting-item {
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .meeting-details {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  } */
+  
+  /* button:hover {
+    background-color: #0056b3;
+  } */
+  

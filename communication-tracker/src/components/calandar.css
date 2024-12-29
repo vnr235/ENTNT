@@ -1,0 +1,36 @@
+/* General calendar container styling */
+.calendar-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Default styling for calendar tiles */
+.react-calendar__tile {
+  color: black !important;  /* Ensure the text color is black */
+  width: auto;
+  height: auto;
+  background-color: aliceblue; /* Default background color */
+  border-radius: 5px;
+}
+
+.react-calendar__tile:hover{
+  background-color: lightgray;
+}
+
+/* Style for completed tasks (Red) */
+.completed-task {
+  background-color: red !important;
+  color: white !important; /* Ensure text color is white */
+}
+
+/* Style for pending tasks (Yellow) */
+.pending-task {
+  background-color: yellow !important;
+  color: black !important; /* Ensure text color is black */
+}
+
+/* Style for upcoming tasks (Green) */
+.upcoming-task {
+  background-color: green !important;
+  color: white !important; /* Ensure text color is white */
+}
