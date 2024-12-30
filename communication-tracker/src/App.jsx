@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import NotificationPanel from "./components/NotificationPanel";
 import UserDashboard from "./components/UserDashboard";
-import CalendarView from "./components/CalendarView";  // Import CalendarView
+// import CalendarView from "./components/CalendarView";  // Import CalendarView
 import Reports from "./components/Reports";
 import LandingPage from "./components/LandingPage";
 

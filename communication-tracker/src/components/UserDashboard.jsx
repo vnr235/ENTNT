@@ -75,6 +75,23 @@ const UserDashboard = () => {
     return null;
   };
 
+  // Function to determine tile class based on the date
+  const tileClassName = ({ date, view }) => {
+    // Highlight today's date
+    if (formatDate(date) === formatDate(new Date())) {
+      return "highlight-today";
+    }
+
+    // Add other classes for meetings if needed (optional)
+    const meetingsForDay = getCommunicationsForDate(date);
+    if (meetingsForDay.length > 0) {
+      return "meeting-date";
+    }
+
+    return null;
+  };
+
+
   return (
     <div className="user-dashboard">
       <h1>User Dashboard</h1>
@@ -83,7 +100,9 @@ const UserDashboard = () => {
           onChange={handleDateChange}
           value={selectedDate}
           tileContent={tileContent}
+          tileClassName={tileClassName}
         />
+
         <div className="meeting-details">
           <h2>Meetings for {selectedDate.toDateString()}</h2>
           {meetingData.length === 0 ? (

@@ -132,12 +132,35 @@ const Dashboard = () => {
 
       setCompanies((prevCompanies) => [...prevCompanies, newCompany]);
       alert("Company added successfully");
-      setShowAddCompany(false); 
+      setShowAddCompany(false);
     } catch (error) {
       console.error("Error adding company:", error);
       alert("Failed to add the company.");
     }
   };
+
+  const handleDeleteCompany = async (companyId) => {
+    if (!window.confirm("Are you sure you want to delete this company?")) {
+      return; 
+    }
+  
+    try {
+      await axios.delete(`http://localhost:5000/api/companies/delete/${companyId}`);
+      setCompanies((prevCompanies) =>
+        prevCompanies.filter((company) => company._id !== companyId)
+      );
+      setMeetings((prevMeetings) => {
+        const { [companyId]: _, ...remainingMeetings } = prevMeetings;
+        return remainingMeetings;
+      });
+  
+      alert("Company deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting the company:", error);
+      alert("Failed to delete the company.");
+    }
+  };
+  
 
   return (
     <div className={`dashboard-container ${selectedCompany || showAddCompany ? "dimmed" : ""}`}>
@@ -195,7 +218,13 @@ const Dashboard = () => {
                       >
                         Edit
                       </button>
+
                     ))}
+                    <button
+                      onClick={() => handleDeleteCompany(company._id)}
+                      style={{ background: 'red', color: 'white', fontSize: 'large', marginLeft: '20px' }}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               );
@@ -237,7 +266,7 @@ const Dashboard = () => {
                   required
                 />
               </label>
-              <label style={{display:'flex'}}>
+              <label style={{ display: 'flex' }}>
                 Notes:
                 <textarea
                   value={meetingForm.notes}
