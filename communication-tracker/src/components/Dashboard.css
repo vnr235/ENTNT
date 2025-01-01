@@ -147,6 +147,35 @@
     color: white;
   }
 
+.edit-company-overlay{
+  position: fixed;
+  top: 70px;
+  left: 500px;
+  width: 600px;
+  border-radius: 20px;
+  background: rgba(254, 254, 254, 0.991);
+  box-shadow: 20px 20px 90px rgba(0, 0, 0, 2);
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  align-items: center;
+  z-index: 1000;
+}
+
+.view-company-overlay{
+  position: fixed;
+  top: 70px;
+  left: 500px;
+  width: 600px;
+  border-radius: 20px;
+  background: rgb(249, 247, 247);
+  box-shadow: 20px 20px 90px rgba(0, 0, 0, 2);
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  align-items: center;
+  z-index: 1000;
+}
 .add-company-overlay{
   position: fixed;
   top: 70px;
@@ -157,6 +186,7 @@
   box-shadow: 20px 20px 90px rgba(0, 0, 0, 2);
   display: flex;
   justify-content: center;
+  padding-bottom: 20px;
   align-items: center;
   z-index: 1000;
 }
@@ -167,4 +197,32 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 1100;
+}
+
+button[type="add"], button[type="edit"], button[type="view"] {
+  background-color: lightblue;
+  color: rgb(9, 9, 9);
+  margin-left: 20px;
+}
+
+button[type="delete"]{
+  background-color: red;
+  color: white;
+  font-size: medium;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+button[type="view"]:hover,
+button[type= "add"]:hover, 
+button[type="edit"]:hover,
+button[type="delete"]:hover {
+  background: rgb(248, 245, 245);
+  color: black;
+  font-size: large;
+}
+
+.comm{
+  margin-top: 20px;
+  background-color: lightblue;
 }

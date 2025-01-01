@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import CommunicationMethods from './CommunicationModal'
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -22,6 +23,9 @@ const Dashboard = () => {
     comments: "",
     communicationPeriodicity: "2 weeks",
   });
+  const [editCompany, setEditCompany] = useState(null);
+
+  const [viewCompany, setViewCompany] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,14 +75,12 @@ const Dashboard = () => {
       }
 
       if (_id) {
-        // Edit existing meeting
         const response = await axios.put(
           `http://localhost:5000/api/communications/${_id}`,
           { date, type, notes }
         );
         const updatedMeeting = response.data;
 
-        // Update meetings state
         setMeetings((prevMeetings) => ({
           ...prevMeetings,
           [selectedCompany]: prevMeetings[selectedCompany].map((meeting) =>
@@ -87,14 +89,12 @@ const Dashboard = () => {
         }));
         alert("Meeting updated successfully");
       } else {
-        // Add a new meeting
         const response = await axios.post(
           `http://localhost:5000/api/communications/${selectedCompany}/next-meeting`,
           { date, type, notes }
         );
         const newMeeting = response.data;
 
-        // Add new meeting to the state
         setMeetings((prevMeetings) => ({
           ...prevMeetings,
           [selectedCompany]: [...(prevMeetings[selectedCompany] || []), newMeeting],
@@ -102,7 +102,7 @@ const Dashboard = () => {
         alert("Meeting added successfully");
       }
 
-      setSelectedCompany(null); // Close the form
+      setSelectedCompany(null);
     } catch (error) {
       console.error("Error saving meeting:", error);
       alert("Failed to save the meeting.");
@@ -141,9 +141,9 @@ const Dashboard = () => {
 
   const handleDeleteCompany = async (companyId) => {
     if (!window.confirm("Are you sure you want to delete this company?")) {
-      return; 
+      return;
     }
-  
+
     try {
       await axios.delete(`http://localhost:5000/api/companies/delete/${companyId}`);
       setCompanies((prevCompanies) =>
@@ -153,14 +153,62 @@ const Dashboard = () => {
         const { [companyId]: _, ...remainingMeetings } = prevMeetings;
         return remainingMeetings;
       });
-  
+
       alert("Company deleted successfully!");
     } catch (error) {
       console.error("Error deleting the company:", error);
       alert("Failed to delete the company.");
     }
   };
-  
+
+  const handleEditCompany = (company) => {
+    // const selectedCompany = companies.find((company) => company._id === companyId);
+    setEditCompany(company);
+  };
+
+  // Function to view company details
+  const handleViewDetails = (company) => {
+    // const selectedCompany = companies.find((company) => company._id === companyId);
+    setViewCompany(company);
+  };
+
+  const handleSaveEditedCompany = async () => {
+    try {
+      const { _id, name, location, linkedin, email, phone, comments, communicationPeriodicity } =
+        editCompany;
+
+      if (!name || !email || !phone) {
+        alert("Name, Email, and Phone Number are required");
+        return;
+      }
+
+      const response = await axios.put(`http://localhost:5000/api/companies/edit/${company_id}`, {
+        name,
+        location,
+        linkedin,
+        email,
+        phone,
+        comments,
+        communicationPeriodicity,
+      });
+
+      const updatedCompany = response.data;
+
+      setCompanies((prevCompanies) =>
+        prevCompanies.map((company) =>
+          company._id === _id ? updatedCompany : company
+        )
+      );
+
+      alert("Company updated successfully");
+      setEditCompany(null);
+    } catch (error) {
+      console.error("Error updating the company:", error);
+      alert("Failed to update the company.");
+    }
+  };
+
+
 
   return (
     <div className={`dashboard-container ${selectedCompany || showAddCompany ? "dimmed" : ""}`}>
@@ -205,14 +253,15 @@ const Dashboard = () => {
                   </td>
                   <td>
                     <button
-                      style={{ backgroundColor: "lightblue" }}
+                      type="add"
                       onClick={() => handleAddMeeting(company._id)}
                     >
                       Add
                     </button>
                     {companyMeetings.map((meeting, index) => (
                       <button
-                        style={{ backgroundColor: "lightblue", marginLeft: "20px" }}
+                        type="edit"
+
                         key={index}
                         onClick={() => handleEditMeeting(company._id, meeting)}
                       >
@@ -221,10 +270,24 @@ const Dashboard = () => {
 
                     ))}
                     <button
-                      onClick={() => handleDeleteCompany(company._id)}
-                      style={{ background: 'red', color: 'white', fontSize: 'large', marginLeft: '20px' }}>
-                      Delete
+                      type="edit"
+                      onClick={() => handleEditCompany(company)}
+                    >
+                      Edit company
                     </button>
+                    <button
+                      type="view"
+                      onClick={() => handleViewDetails(company)}
+                    >
+                      View details
+                    </button>
+                    <button
+                      type="delete"
+                      onClick={() => handleDeleteCompany(company._id)}
+                    >
+                      Delete Company
+                    </button>
+
                   </td>
                 </tr>
               );
@@ -379,6 +442,121 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      {editCompany && (
+        <div className="edit-company-overlay">
+          <div className="edit-company-form">
+            <h2>Edit Company</h2>
+            <form
+              className="formm"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSaveEditedCompany();
+              }}
+            >
+              <label>
+                Name:
+                <input
+                  type="text"
+                  value={editCompany.name}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, name: e.target.value })
+                  }
+                  required
+                />
+              </label>
+              <label>
+                Location:
+                <input
+                  type="text"
+                  value={editCompany.location}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, location: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                LinkedIn Profile:
+                <input
+                  type="url"
+                  value={editCompany.linkedinProfile}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, linkedin: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Email (comma separated):
+                <input
+                  type="email"
+                  value={editCompany.emails}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, email: e.target.value })
+                  }
+                  required
+                />
+              </label>
+              <label>
+                Phone Number (comma separated):
+                <input
+                  type="tel"
+                  value={editCompany.phoneNumbers}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, phone: e.target.value })
+                  }
+                  required
+                />
+              </label>
+              <label>
+                Comments:
+                <textarea
+                  value={editCompany.comments}
+                  onChange={(e) =>
+                    setEditCompany({ ...editCompany, comments: e.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Communication Periodicity:
+                <select
+                  value={editCompany.communicationPeriodicity}
+                  onChange={(e) => setEditCompany({ ...editCompany, communicationPeriodicity: e.target.value })}
+                >
+                  <option value="1 week">1 week</option>
+                  <option value="2 weeks">2 weeks</option>
+                  <option value="1 month">1 month</option>
+                </select>
+              </label>
+              <button type="submit">Save</button>
+              <button type="button" onClick={() => setEditCompany(null)}>
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* View Company Details */}
+      {viewCompany && (
+        <div className="view-company-overlay">
+          <div className="view-company-details">
+            <h2>Company Details</h2>
+            <p><strong>Name:</strong> {viewCompany.name}</p>
+            <p><strong>Location:</strong> {viewCompany.location}</p>
+            <p><strong>LinkedIn:</strong> {viewCompany.linkedinProfile}</p>
+            <p><strong>Email:</strong> {viewCompany.emails.join(", ")}</p>
+            <p><strong>Phone:</strong> {viewCompany.phoneNumbers.join(", ")}</p>
+            <p><strong>Comments:</strong> {viewCompany.comments}</p>
+            <p><strong>Communication Periodicity:</strong> {viewCompany.communicationPeriodicity}</p>
+            <button type="delete" onClick={() => setViewCompany(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      <div style={{ marginTop: "20px"}}>
+        <CommunicationMethods />
+      </div>
     </div>
   );
 };

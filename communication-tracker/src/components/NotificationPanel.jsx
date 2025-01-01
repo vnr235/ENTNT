@@ -1,137 +1,92 @@
-// import React, { useState, useEffect } from "react";
-// import { getCompanies } from "../services/companyService";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./Notification.css"; // Add relevant styles here
 
-// const NotificationPanel = () => {
-//   const [overdueCommunications, setOverdueCommunications] = useState([]);
-//   const [todaysCommunications, setTodaysCommunications] = useState([]);
+const formatDate = (date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
-//   useEffect(() => {
-//     fetchNotifications();
-//   }, []);
-
-//   const fetchNotifications = async () => {
-//     try {
-//       const companies = await getCompanies();
-//       const today = new Date().toISOString().split("T")[0];
-  
-//       const overdue = companies.filter(
-//         (company) =>
-//           company.nextCommunication &&
-//           new Date(company.nextCommunication.date) < new Date(today)
-//       );
-  
-//       const dueToday = companies.filter(
-//         (company) =>
-//           company.nextCommunication &&
-//           new Date(company.nextCommunication.date).toISOString().split("T")[0] ===
-//             today
-//       );
-  
-//       setOverdueCommunications(overdue);
-//       setTodaysCommunications(dueToday);
-//     } catch (error) {
-//       console.error("Failed to fetch notifications", error);
-//     }
-//   };
-  
-
-//   return (
-//     <div>
-//       <h2>Notifications</h2>
-//       <div>
-//         <h4>Overdue Communications</h4>
-//         {overdueCommunications.length > 0 ? (
-//           <ul>
-//             {overdueCommunications.map((company) => (
-//               <li key={company._id}>{company.name}</li>
-//             ))}
-//           </ul>
-//         ) : (
-//           <p>No overdue communications.</p>
-//         )}
-//       </div>
-//       <div>
-//         <h4>Today's Communications</h4>
-//         {todaysCommunications.length > 0 ? (
-//           <ul>
-//             {todaysCommunications.map((company) => (
-//               <li key={company._id}>{company.name}</li>
-//             ))}
-//           </ul>
-//         ) : (
-//           <p>No communications due today.</p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default NotificationPanel;
-import React, { useState, useEffect } from "react";
-import { getCompanies } from "../services/companyService";
-
-const NotificationPanel = () => {
+const Notifications = ({ calendarData }) => {
   const [overdueCommunications, setOverdueCommunications] = useState([]);
   const [todaysCommunications, setTodaysCommunications] = useState([]);
+  const [isNotificationsVisible, setIsNotificationsVisible] = useState(false);
 
   useEffect(() => {
-    fetchNotifications();
-  }, []);
+    const now = new Date();
+    const today = formatDate(now);
 
-  const fetchNotifications = async () => {
-    try {
-      const companies = await getCompanies();
-      const today = new Date().toISOString().split("T")[0];
+    // Overdue: Scheduled before today and still marked as scheduled
+    const overdue = calendarData.filter(
+      (comm) =>
+         formatDate(comm.date) < today &&
+        comm.status === "Scheduled"
+    );
 
-      const overdue = companies.filter(
-        (company) =>
-          company.nextCommunication &&
-          new Date(company.nextCommunication.date) < new Date(today)
-      );
+    // Today's: Scheduled for today
+    const dueToday = calendarData.filter(
+      (comm) => formatDate(comm.date) === today && comm.status === "Scheduled"
+    );
 
-      const dueToday = companies.filter(
-        (company) =>
-          company.nextCommunication &&
-          new Date(company.nextCommunication.date).toISOString().split("T")[0] ===
-            today
-      );
+    setOverdueCommunications(overdue);
+    setTodaysCommunications(dueToday);
+  }, [calendarData]);
 
-      setOverdueCommunications(overdue);
-      setTodaysCommunications(dueToday);
-    } catch (error) {
-      console.error("Failed to fetch notifications", error);
-    }
+  const toggleNotifications = () => {
+    setIsNotificationsVisible((prevState) => !prevState);
   };
 
   return (
-    <div>
-      <h2>Notifications</h2>
-      <div>
-        <h4>Overdue Communications</h4>
-        {overdueCommunications.length > 0 ? (
-          <ul>
-            {overdueCommunications.map((company) => (
-              <li key={company._id}>{company.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No overdue communications.</p>
-        )}
-      </div>
-      <div>
-        <h4>Today's Communications</h4>
-        {todaysCommunications.length > 0 ? (
-          <ul>
-            {todaysCommunications.map((company) => (
-              <li key={company._id}>{company.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No communications due today.</p>
-        )}
-      </div>
+    <div className="notifications">
+      <header className="notifications-header">
+        <span className="notification-icon" onClick={toggleNotifications}>
+          🔔
+          <span className="badge">
+            {overdueCommunications.length + todaysCommunications.length}
+          </span>
+        </span>
+      </header>
+
+      {isNotificationsVisible && (
+        <div className="notification-grids">
+          <div className="notification-section overdue">
+            <h2>Overdue Communications</h2>
+            {overdueCommunications.length === 0 ? (
+              <p>No overdue communications.</p>
+            ) : (
+              <ul>
+                {overdueCommunications.map((comm, index) => (
+                  <li key={index}>
+                    <strong>{comm.companyName}</strong> - {comm.type} (
+                    {formatDate(comm.date)})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="notification-section todays">
+            <h2>Today's Communications</h2>
+            {todaysCommunications.length === 0 ? (
+              <p>No communications due today.</p>
+            ) : (
+              <ul>
+                {todaysCommunications.map((comm, index) => (
+                  <li key={index}>
+                    <strong>{comm.companyName}</strong> - {comm.type} (
+                    {formatDate(comm.date)})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default NotificationPanel;
+export default Notifications;

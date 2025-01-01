@@ -10,6 +10,10 @@
     color: #007bff;
   }
   
+.dashboard-table th{
+  background-color: rgb(130, 217, 225);
+}
+
   .calendar-container {
     display: flex;
     flex-direction: column;
@@ -26,6 +30,8 @@
   .meeting-item {
     font-size: 12px;
     color: #333;
+    margin-bottom: 10px;
+    font-size: large;
   }
   
   .meeting-details {
@@ -83,17 +89,19 @@
   color: #333; 
 }
 
+.popup-layover{
+  position: fixed;
+  top: 70px;
+  left: 500px;
+  width: 600px;
+  border-radius: 20px;
+  background: rgb(249, 247, 247);
+  box-shadow: 10px 10px 90px rgba(0, 0, 0, 2);
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  align-items: center;
+  z-index: 1000;
+}
 
-  /* button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  } */
-  
-  /* button:hover {
-    background-color: #0056b3;
-  } */
-  
+ 

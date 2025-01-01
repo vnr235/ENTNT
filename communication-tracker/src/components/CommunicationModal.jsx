@@ -1,142 +1,64 @@
-// import React, { useState } from "react";
-// import { addCommunication } from "../services/communicationService";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './calandar.css';
 
-// const CommunicationModal = ({ company, onClose }) => {
-//   const [type, setType] = useState("");
-//   const [date, setDate] = useState("");
-//   const [notes, setNotes] = useState("");
+const CommunicationMethods = () => {
+  const [methods, setMethods] = useState([]); // Ensure initial state is an empty array
+  const [isVisible, setIsVisible] = useState(false);
 
-//   const handleSubmit = async () => {
-//     try {
-//       await addCommunication({
-//         companyId: company._id,
-//         type,
-//         date,
-//         notes,
-//       });
-//       alert("Communication added successfully!");
-//       onClose();
-//     } catch (error) {
-//       console.error("Failed to add communication", error);
-//     }
-//   };
+  useEffect(() => {
+    if (isVisible) {
+      fetchCommunicationMethods();
+    }
+  }, [isVisible]);
 
-//   return (
-//     <div className="modal-overlay">
-//       <div className="modal">
-//         <h2>Add Communication</h2>
-//         <form>
-//           <div className="form-group">
-//             <label>Type</label>
-//             <select
-//               className="form-control"
-//               value={type}
-//               onChange={(e) => setType(e.target.value)}
-//             >
-//               <option value="">Select Type</option>
-//               <option value="LinkedIn Post">LinkedIn Post</option>
-//               <option value="Email">Email</option>
-//               <option value="Phone Call">Phone Call</option>
-//             </select>
-//           </div>
-//           <div className="form-group">
-//             <label>Date</label>
-//             <input
-//               type="date"
-//               className="form-control"
-//               value={date}
-//               onChange={(e) => setDate(e.target.value)}
-//             />
-//           </div>
-//           <div className="form-group">
-//             <label>Notes</label>
-//             <textarea
-//               className="form-control"
-//               value={notes}
-//               onChange={(e) => setNotes(e.target.value)}
-//             />
-//           </div>
-//           <button type="button" className="btn btn-success" onClick={handleSubmit}>
-//             Submit
-//           </button>
-//           <button type="button" className="btn btn-secondary" onClick={onClose}>
-//             Close
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default CommunicationModal;
-import React, { useState } from "react";
-import { addCommunication } from "../services/communicationService";
-
-const CommunicationModal = ({ company, onClose }) => {
-  const [type, setType] = useState("");
-  const [date, setDate] = useState("");
-  const [notes, setNotes] = useState("");
-
-  const handleSubmit = async () => {
+  const fetchCommunicationMethods = async () => {
     try {
-      await addCommunication({
-        companyId: company._id,
-        type,
-        date,
-        notes,
-      });
-      alert("Communication added successfully!");
-      onClose();
-    } catch (error) {
-      console.error("Failed to add communication", error);
+      const response = await axios.get('http://localhost:5000/api/communication-methods'); 
+      const data = Array.isArray(response.data) ? response.data : [];
+      setMethods(data);
+    } catch (err) {
+      console.error('Error fetching communication methods:', err);
     }
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h2>Add Communication with {company.name}</h2>
-        <form>
-          <div className="form-group">
-            <label>Type</label>
-            <select
-              className="form-control"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="">Select Type</option>
-              <option value="LinkedIn Post">LinkedIn Post</option>
-              <option value="Email">Email</option>
-              <option value="Phone Call">Phone Call</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Date</label>
-            <input
-              type="date"
-              className="form-control"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label>Notes</label>
-            <textarea
-              className="form-control"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </div>
-          <button type="button" className="btn btn-success" onClick={handleSubmit}>
-            Submit
-          </button>
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Close
-          </button>
-        </form>
-      </div>
+    <div>
+      <button className='onn' onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide Communication Methods' : 'Show Communication Methods'}
+      </button>
+
+      {isVisible && (
+        <div className="methods-container">
+          <h2>Communication Methods</h2>
+          {methods.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Sequence</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Mandatory</th>
+                </tr>
+              </thead>
+              <tbody>
+                {methods.map((method) => (
+                  <tr key={method.sequence}>
+                    <td>{method.sequence}</td>
+                    <td>{method.name}</td>
+                    <td>{method.description}</td>
+                    <td>{method.mandatory ? 'Yes' : 'No'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No communication methods available.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
 
-export default CommunicationModal;
+export default CommunicationMethods;

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Calendar from "react-calendar";
+import Notifications from './NotificationPanel';
 import UserTableView from "./UserTableView"; // Import the new UserTableView component
 import "./UserDashboard.css";
+import { Link } from "react-router-dom";
 
 // Helper function to format date as YYYY-MM-DD
 const formatDate = (date) => {
@@ -23,6 +25,7 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
+        console.log("hello");
         const response = await axios.get("http://localhost:5000/api/calendar");
         setCalendarData(response.data);
       } catch (error) {
@@ -59,7 +62,7 @@ const UserDashboard = () => {
   }, [selectedDate, calendarData]);
 
   // Custom tile content to display meetings on each date block
-  const tileContent = ({ date, view }) => {
+  const tileContent = ({ date }) => {
     const meetingsForDay = getCommunicationsForDate(date);
     if (meetingsForDay.length > 0) {
       return (
@@ -94,16 +97,20 @@ const UserDashboard = () => {
 
   return (
     <div className="user-dashboard">
-      <h1>User Dashboard</h1>
-      <div className="calendar-container">
-        <Calendar
-          onChange={handleDateChange}
-          value={selectedDate}
-          tileContent={tileContent}
-          tileClassName={tileClassName}
-        />
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <h1>User </h1>
+        <Notifications calendarData={calendarData} />
+      </div>
 
-        <div className="meeting-details">
+      <div className="calendar-container">
+      <Calendar
+        onChange={handleDateChange}
+        value={selectedDate}
+        tileContent={tileContent}
+        tileClassName={tileClassName}
+      />
+
+        <div className={`meeting-details ${isHovered ? "hovered" : ""}`}>
           <h2>Meetings for {selectedDate.toDateString()}</h2>
           {meetingData.length === 0 ? (
             <p>No meetings scheduled for this date.</p>
@@ -119,10 +126,14 @@ const UserDashboard = () => {
           )}
         </div>
       </div>
+    
 
-      {/* User Table View (without Edit/Add functionality) */}
-      <UserTableView userId={1} /> {/* Assuming userId or any other needed prop */}
-    </div>
+      {/* User Table View (without Edit/Add functionality) */ }
+  <UserTableView userId={1} /> {/* Assuming userId or any other needed prop */ }
+  <Link to="/report">
+    <button>view Communication Frequency Report</button>
+  </Link>
+    </div >
   );
 };
 

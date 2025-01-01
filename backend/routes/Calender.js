@@ -1,16 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const Company = require("../models/Company"); // Assuming this is your Company model
+const Company = require("../models/Company");
 const Communication = require("../models/Communication");
 
-// Get past communications for calendar
+// Fetch both last communications (past) and scheduled communications (future) for calendar
 router.get("/", async (req, res) => {
   try {
     const companies = await Company.find();
-    const communication = await Communication.find();
-
+    const scheduledCommunications = await Communication.find();
+   
+    // Combine both last communications and scheduled communications
     const calendarData = [];
 
+    // Last communications (past)
     companies.forEach((company) => {
       if (company.lastCommunications) {
         company.lastCommunications.forEach((comm) => {
@@ -19,21 +21,27 @@ router.get("/", async (req, res) => {
             type: comm.type,
             notes: comm.notes,
             companyName: company.name,
+            status:  "Completed" , // Completed if the meeting date is in the past
           });
         });
       }
     });
 
-    if (Array.isArray(communication)) {
-      communication.forEach((comm) => {
-        calendarData.push({
-          date: comm.date,
-          type: comm.type,
-          notes: comm.notes,
-          companyName: "company", // Adjust this if needed
-        });
+
+    // Scheduled communications (future)
+    for (const comm of scheduledCommunications) {
+      const company = await Company.findById(comm.companyId); // Wait for the promise to resolve
+      calendarData.push({
+        date: comm.date,
+        type: comm.type,
+        notes: comm.notes,
+        companyName: comm.name, // Use the resolved company data
+        status: "Scheduled",
       });
     }
+
+    // Sort all communications by date
+    calendarData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     res.json(calendarData);
   } catch (error) {
