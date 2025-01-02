@@ -7,17 +7,27 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page">
-      <h1>Welcome to the Application</h1>
-      <div className="button-group">
-        <button className="admin-btn" onClick={() => navigate("/admin-dashboard")}>
+      <div className="header">
+        <h1>Welcome to our Platform</h1>
+        <p>Choose your role to proceed</p>
+      </div>
+      <div className="button-container">
+        <button className="role-button admin-button" onClick={()=> navigate("/admin-dashboard")}>
           Admin
         </button>
-        <button className="user-btn" onClick={() => navigate("/user-dashboard")}>
+        <button className="role-button user-button" onClick={()=> navigate("/user-dashboard")}>
           User
         </button>
       </div>
+      <footer className="footer">
+        <p>© 2025 Your Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
 
 export default LandingPage;
+
+
+
+

@@ -39,21 +39,36 @@ const Notifications = ({ calendarData }) => {
     setIsNotificationsVisible((prevState) => !prevState);
   };
 
+  const closeNotifications = () => {
+    setIsNotificationsVisible(false);
+  };
+
   return (
     <div className="notifications">
       <header className="notifications-header">
-        <span className="notification-icon" onClick={toggleNotifications}>
-          🔔
-          <span className="badge">
-            {overdueCommunications.length + todaysCommunications.length}
+        {/* Show icon only when notifications are not visible */}
+        {!isNotificationsVisible && (
+          <span className="notification-icon" onClick={toggleNotifications}>
+            🔔
+            <span className="badge">
+              {overdueCommunications.length + todaysCommunications.length}
+            </span>
           </span>
-        </span>
+        )}
       </header>
 
       {isNotificationsVisible && (
         <div className="notification-grids">
+          <div className="notification-header">
+            {/* <h2>Notifications</h2> */}
+            {/* Cross button to close the notification list */}
+            <span className="close-button" onClick={closeNotifications}>
+              &times;
+            </span>
+          </div>
+
           <div className="notification-section overdue">
-            <h2>Overdue Communications</h2>
+            <h3>Overdue Communications</h3>
             {overdueCommunications.length === 0 ? (
               <p>No overdue communications.</p>
             ) : (
@@ -69,7 +84,7 @@ const Notifications = ({ calendarData }) => {
           </div>
 
           <div className="notification-section todays">
-            <h2>Today's Communications</h2>
+            <h3>Today's Communications</h3>
             {todaysCommunications.length === 0 ? (
               <p>No communications due today.</p>
             ) : (

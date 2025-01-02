@@ -15,7 +15,9 @@
 }
 
 .dashboard-container {
+  /* background : linear-gradient(to bottom right, #fcc4a3, #f8b982); */
     padding: 20px;
+    height: 95vh;
     font-family: Arial, sans-serif;
   }
   
@@ -23,17 +25,20 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    backdrop-filter: blur(5px);
   }
   
   .dashboard-table th,
   .dashboard-table td {
+    font-size: large;
+    color: #0a0a0a;
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
   }
   
   .dashboard-table th {
-    background-color: #f4f4f4;
+    background-color: #eebaba;
   }
   
   .highlight-red {

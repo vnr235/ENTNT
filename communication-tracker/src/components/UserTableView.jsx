@@ -8,6 +8,8 @@ const UserTableView = ({ userId }) => {
   const [meetings, setMeetings] = useState({});
   const [popup, setPopup] = useState({ show: false, company: null, meeting: null });
   const [formData, setFormData] = useState({ date: "", notes: "", type: "" });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +40,9 @@ const UserTableView = ({ userId }) => {
   }, []);
 
   const handleDetails = (company) => {
-    alert(`Company Details:\n\nName: ${company.name}\nEmail: ${company.email}\nPhone: ${company.phone}`);
+    const content = `<strong>Name:</strong> ${company.name} <br/><br/> <strong>Email:</strong> ${company.emails} <br/><br /> <strong>Phone:</strong> ${company.phoneNumbers}`;
+    setModalContent(content);
+    setModalVisible(true);
   };
 
   const handleMarkCompleted = (company, meeting) => {
@@ -93,6 +97,7 @@ const UserTableView = ({ userId }) => {
     return hasPastMeeting ? "light-red" : "light-green";
   };
 
+
   return (
     <div className="dashboard-container">
       <h1>Company Communication Dashboard</h1>
@@ -132,9 +137,9 @@ const UserTableView = ({ userId }) => {
                     ))}
                   </td>
                   <td>
-                    <button onClick={() => handleDetails(company)}>Details</button>
+                    <button type="add" onClick={() => handleDetails(company)}>Details</button>
                     {companyMeetings.map((meeting, index) => (
-                      <button key={index} onClick={() => handleMarkCompleted(company, meeting)}>
+                      <button type="add" key={index} onClick={() => handleMarkCompleted(company, meeting)}>
                         Mark Completed
                       </button>
                     ))}
@@ -148,9 +153,10 @@ const UserTableView = ({ userId }) => {
 
       {popup.show && (
         <div className="popup-layover">
-          <div className="popup">
+          <div className="popup" >
             <h2>Mark Meeting as Completed</h2>
-            <form className="formm"
+            <form
+              className="formm"
               onSubmit={(e) => {
                 e.preventDefault();
                 handlePopupSubmit();
@@ -183,13 +189,30 @@ const UserTableView = ({ userId }) => {
                 />
               </label>
               <button type="submit">Save</button>
-              <button type="button" onClick={() => setPopup({ show: false, company: null, meeting: null })}>
+              <button
+                type="button"
+                onClick={() => setPopup({ show: false, company: null, meeting: null })}
+              >
                 Cancel
               </button>
             </form>
           </div>
         </div>
       )}
+
+
+
+      {/* Modal for displaying company details */}
+      {modalVisible && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Company Details</h2>
+            <div dangerouslySetInnerHTML={{ __html: modalContent }} />
+            <button type="delete" onClick={() => setModalVisible(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

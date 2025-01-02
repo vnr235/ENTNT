@@ -20,6 +20,7 @@ const UserDashboard = () => {
   const [calendarData, setCalendarData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [meetingData, setMeetingData] = useState([]);
+  const [isHovered, setIsHovered] = useState(false); // State to track hover effect
 
   // Fetch combined calendar data (both past and scheduled communications) from the backend
   useEffect(() => {
@@ -54,12 +55,8 @@ const UserDashboard = () => {
   // Handle date selection
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    setMeetingData(getCommunicationsForDate(date)); // Set the meetings data for the selected date
   };
-
-  // Get the meetings data for the selected date
-  useEffect(() => {
-    setMeetingData(getCommunicationsForDate(selectedDate));
-  }, [selectedDate, calendarData]);
 
   // Custom tile content to display meetings on each date block
   const tileContent = ({ date }) => {
@@ -94,46 +91,46 @@ const UserDashboard = () => {
     return null;
   };
 
-
   return (
     <div className="user-dashboard">
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        <h1>User </h1>
+        <h1>User</h1>
         <Notifications calendarData={calendarData} />
       </div>
 
       <div className="calendar-container">
-      <Calendar
-        onChange={handleDateChange}
-        value={selectedDate}
-        tileContent={tileContent}
-        tileClassName={tileClassName}
-      />
+        <Calendar
+          onChange={handleDateChange}
+          value={selectedDate}
+          tileContent={tileContent}
+          tileClassName={tileClassName}
+        />
 
-        <div className={`meeting-details ${isHovered ? "hovered" : ""}`}>
-          <h2>Meetings for {selectedDate.toDateString()}</h2>
-          {meetingData.length === 0 ? (
-            <p>No meetings scheduled for this date.</p>
-          ) : (
-            meetingData.map((meeting, index) => (
+        {meetingData.length > 0 && (
+          <div 
+            className={`meeting-details ${isHovered ? "hovered" : ""}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <h2>Meetings for {selectedDate.toDateString()}</h2>
+            {meetingData.map((meeting, index) => (
               <div key={index} className="meeting-item">
                 <p><strong>Company:</strong> {meeting.companyName}</p>
                 <p><strong>Type:</strong> {meeting.type}</p>
                 <p><strong>Notes:</strong> {meeting.notes}</p>
                 <p><strong>Status:</strong> {meeting.status}</p>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
-    
 
-      {/* User Table View (without Edit/Add functionality) */ }
-  <UserTableView userId={1} /> {/* Assuming userId or any other needed prop */ }
-  <Link to="/report">
-    <button>view Communication Frequency Report</button>
-  </Link>
-    </div >
+      {/* User Table View (without Edit/Add functionality) */}
+      <UserTableView userId={1} /> {/* Assuming userId or any other needed prop */}
+      <Link to="/report">
+        <button>view Communication Frequency Report</button>
+      </Link>
+    </div>
   );
 };
 

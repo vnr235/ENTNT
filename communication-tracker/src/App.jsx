@@ -4,7 +4,7 @@ import Dashboard from "./components/Dashboard";
 import UserDashboard from "./components/UserDashboard";
 import Report from "./components/Reports";
 
-import LandingPage from "./components/LandingPage";
+import LandingPage from "./components/LandingPage.jsx";
 import "./App.css";
 const App = () => {
   return (
