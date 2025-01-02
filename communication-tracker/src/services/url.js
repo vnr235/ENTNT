@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://entnt-uz4q.onrender.com";
 
 export const getCompanies = async () => {
   try {
