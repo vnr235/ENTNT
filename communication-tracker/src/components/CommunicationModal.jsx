@@ -14,7 +14,7 @@ const CommunicationMethods = () => {
 
   const fetchCommunicationMethods = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/communication-methods'); 
+      const response = await axios.get('https://entnt-uz4q.onrender.com/api/communication-methods'); 
       const data = Array.isArray(response.data) ? response.data : [];
       setMethods(data);
     } catch (err) {
