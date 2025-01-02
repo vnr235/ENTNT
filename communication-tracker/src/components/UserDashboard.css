@@ -60,16 +60,20 @@
 
 /* Default style for calendar tiles */
 .react-calendar__tile {
+  background-color: #80a9b4;
+  color: #f0f8ff;
   position: relative;
+  margin: 10px 5px 0px;
   padding: 10px;
-  font-size: 14px;
-  border-radius: 5px;
+  font-size: 18px;
+  border-radius: 15px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 
 .react-calendar__tile:hover {
   background-color: rgba(0, 123, 255, 0.1); 
+  color: #000;
   cursor: pointer;
 }
 
