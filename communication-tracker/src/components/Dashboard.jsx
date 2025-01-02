@@ -221,7 +221,7 @@ const Dashboard = () => {
     <div className={`dashboard-container ${selectedCompany || showAddCompany ? "dimmed" : ""}`}>
       <div className="dashboard-header">
         <h1>Company Communication Dashboard</h1>
-        <button onClick={() => setShowAddCompany(true)}>Add Company</button>
+        <button className="add" onClick={() => setShowAddCompany(true)}>Add Company</button>
       </div>
 
       {loading ? (

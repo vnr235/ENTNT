@@ -38,9 +38,21 @@
   }
   
   .dashboard-table th {
+    text-align: center;
+    justify-content: center;
     background-color: #eebaba;
   }
+
+  .dashboard-table td {
+    
+  }
   
+.dashboard-table th:hover,
+.dashboard-table td:hover {
+  border-radius: 20px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 1);
+}
+
   .highlight-red {
     background-color: #ffcccc; /* Light red for overdue */
   }
@@ -49,6 +61,13 @@
     background-color: #fff2cc; /* Light yellow for due today */
   }
   
+.add:hover{
+  background-color: #025e1c;
+  color: #fafafa;
+  font-weight: bold;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+
   .communication-tooltip {
     position: relative;
     display: inline-block;
