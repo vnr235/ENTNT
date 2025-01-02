@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { getcalendar } from '../services/url';
 
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -12,34 +13,33 @@ const OverdueTrends = () => {
 
   useEffect(() => {
     const currentDate = new Date();
-
-    axios
-      .get('http://localhost:5000/api/calendar/')
+  
+    getcalendar()
       .then((response) => {
         const data = response.data;
-
+  
         // Filter overdue communications
         const overdue = data.filter((item) => {
           const itemDate = new Date(item.date);
           return itemDate < currentDate && item.status.toLowerCase() === 'scheduled';
         });
-
+  
         // Group by company and count overdue communications per day
         const groupedData = overdue.reduce((acc, item) => {
           const company = item.companyName;
           const date = new Date(item.date).toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
+  
           if (!acc[company]) {
             acc[company] = {};
           }
           if (!acc[company][date]) {
             acc[company][date] = 0;
           }
-
+  
           acc[company][date] += 1;
           return acc;
         }, {});
-
+  
         setOverdueData(groupedData);
         setLoading(false);
       })
@@ -48,6 +48,7 @@ const OverdueTrends = () => {
         setLoading(false);
       });
   }, []);
+  
 
   // Prepare chart data
   const companies = Object.keys(overdueData);

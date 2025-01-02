@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./UserDashboard.css";
+import { deleteCommunication } from "../services/url";
+import { editcompany } from "../services/url";
 
 const UserTableView = ({ userId }) => {
   const [companies, setCompanies] = useState([]);
@@ -58,12 +60,12 @@ const UserTableView = ({ userId }) => {
       ];
 
       // Update the company with the new communication
-      await axios.put(`http://localhost:5000/api/companies/edit/${company._id}`, {
+      await editcompany(company._id, {
         lastCommunications: updatedCommunications,
       });
 
       // Delete the completed meeting
-      await axios.delete(`http://localhost:5000/api/communications/delete/${meeting._id}`);
+      await deleteCommunication(meeting._id);
 
       // Update the state
       setCompanies((prev) =>

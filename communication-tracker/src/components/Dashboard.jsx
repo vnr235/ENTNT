@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CommunicationMethods from './CommunicationModal'
 import "./Dashboard.css";
+import { getCompanies } from "../services/url";
 
 const Dashboard = () => {
   const [companies, setCompanies] = useState([]);
@@ -30,19 +31,24 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/companies");
-        const companiesData = response.data;
-
+        const response = await getCompanies();
+        const companiesData = response;
+  
+        if (companiesData.length === 0) {
+          console.log("No companies data found");
+          return; // No need to proceed if no data
+        }
+  
         const meetingPromises = companiesData.map(async (company) => {
           const meetingResponse = await axios.get(
             `http://localhost:5000/api/communications/${company._id}/meetings`
           );
           return { [company._id]: meetingResponse.data };
         });
-
+  
         const meetingsData = await Promise.all(meetingPromises);
         const meetingsMap = Object.assign({}, ...meetingsData);
-
+  
         setCompanies(companiesData);
         setMeetings(meetingsMap);
         setLoading(false);
@@ -51,9 +57,10 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const handleAddMeeting = (companyId) => {
     setSelectedCompany(companyId);

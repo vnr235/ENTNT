@@ -5,13 +5,14 @@ import Notifications from './NotificationPanel';
 import UserTableView from "./UserTableView"; // Import the new UserTableView component
 import "./UserDashboard.css";
 import { Link } from "react-router-dom";
+import { getcalendar } from "../services/url";
 
-// Helper function to format date as YYYY-MM-DD
+
 const formatDate = (date) => {
   const d = new Date(date);
   const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0'); // Add leading zero for single digit months
-  const day = String(d.getDate()).padStart(2, '0'); // Add leading zero for single digit days
+  const month = String(d.getMonth() + 1).padStart(2, '0'); 
+  const day = String(d.getDate()).padStart(2, '0'); 
 
   return `${year}-${month}-${day}`;
 };
@@ -20,14 +21,13 @@ const UserDashboard = () => {
   const [calendarData, setCalendarData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [meetingData, setMeetingData] = useState([]);
-  const [isHovered, setIsHovered] = useState(false); // State to track hover effect
+  const [isHovered, setIsHovered] = useState(false); 
 
-  // Fetch combined calendar data (both past and scheduled communications) from the backend
+
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
-        console.log("hello");
-        const response = await axios.get("http://localhost:5000/api/calendar");
+        const response = await getcalendar();
         setCalendarData(response.data);
       } catch (error) {
         console.error("Error fetching calendar data:", error);
@@ -37,11 +37,11 @@ const UserDashboard = () => {
     fetchCalendarData();
   }, []);
 
-  // Get the communications (meetings) for the selected date
+ 
   const getCommunicationsForDate = (date) => {
     const formattedDate = formatDate(date); // Format date as YYYY-MM-DD
     return calendarData.filter((comm) => {
-      const meetingDate = formatDate(comm.date); // Format communication date
+      const meetingDate = formatDate(comm.date);
       return meetingDate === formattedDate;
     }).map((comm) => ({
       companyName: comm.companyName,

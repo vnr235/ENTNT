@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
+import { getreport } from '../services/url';
 import { jsPDF } from 'jspdf';
 import {
   Chart as ChartJS,
@@ -22,12 +23,12 @@ const Report = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data from the API
-    axios
-      .get('http://localhost:5000/api/report/communication-frequency')
-      .then((response) => {
+    // Define an async function inside the useEffect
+    const fetchData = async () => {
+      try {
+        const response = await getreport();
         const fetchedData = response.data;
-
+  
         // Add success ratio dynamically
         const totalAttempts = {
           "LinkedIn Post": 5,
@@ -37,7 +38,7 @@ const Report = () => {
           "Message": 5,
           "Other": 5,
         };
-
+  
         const dataWithSuccessRatio = Object.entries(fetchedData).reduce(
           (acc, [key, frequency]) => {
             const successRatio = totalAttempts[key]
@@ -48,15 +49,18 @@ const Report = () => {
           },
           {}
         );
-
+  
         setData(dataWithSuccessRatio);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
+      }
+    };
+  
+    fetchData(); // Call the async function
   }, []);
+  
 
   // Prepare data for frequency chart
   const frequencyData = {
