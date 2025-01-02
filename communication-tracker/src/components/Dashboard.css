@@ -40,6 +40,12 @@
   .dashboard-table th {
     background-color: #eebaba;
   }
+
+.dashboard-table th:hover,
+.dashboard-table td:hover {
+  border-radius: 20px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 1);
+}
   
   .highlight-red {
     background-color: #ffcccc; /* Light red for overdue */
