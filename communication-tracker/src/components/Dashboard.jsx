@@ -83,7 +83,7 @@ const Dashboard = () => {
 
       if (_id) {
         const response = await axios.put(
-          `http://localhost:5000/api/communications/${_id}`,
+          `https://entnt-uz4q.onrender.com/api/communications/${_id}`,
           { date, type, notes }
         );
         const updatedMeeting = response.data;
@@ -97,7 +97,7 @@ const Dashboard = () => {
         alert("Meeting updated successfully");
       } else {
         const response = await axios.post(
-          `http://localhost:5000/api/communications/${selectedCompany}/next-meeting`,
+          `https://entnt-uz4q.onrender.com/api/communications/${selectedCompany}/next-meeting`,
           { date, type, notes }
         );
         const newMeeting = response.data;
@@ -125,7 +125,7 @@ const Dashboard = () => {
         alert("Name, Email, and Phone Number are required");
         return;
       }
-      const response = await axios.post("http://localhost:5000/api/companies/add", {
+      const response = await axios.post("https://entnt-uz4q.onrender.com/api/companies/add", {
         name,
         location,
         linkedin,
@@ -152,7 +152,7 @@ const Dashboard = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/companies/delete/${companyId}`);
+      await axios.delete(`https://entnt-uz4q.onrender.com/api/companies/delete/${companyId}`);
       setCompanies((prevCompanies) =>
         prevCompanies.filter((company) => company._id !== companyId)
       );
@@ -189,7 +189,7 @@ const Dashboard = () => {
         return;
       }
 
-      const response = await axios.put(`http://localhost:5000/api/companies/edit/${company_id}`, {
+      const response = await axios.put(`https://entnt-uz4q.onrender.com/api/companies/edit/${company_id}`, {
         name,
         location,
         linkedin,
