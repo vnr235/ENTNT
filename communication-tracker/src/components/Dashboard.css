@@ -43,9 +43,17 @@
     background-color: #eebaba;
   }
 
+<<<<<<< HEAD
   .dashboard-table td {
     
   }
+=======
+.dashboard-table th:hover,
+.dashboard-table td:hover {
+  border-radius: 20px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 1);
+}
+>>>>>>> 5b70836df1511b05cc4b028b0953315d187436ba
   
 .dashboard-table th:hover,
 .dashboard-table td:hover {
