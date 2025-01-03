@@ -1,5 +1,3 @@
-#Live App
-[https://](https://entnt123.vercel.app/)
 
 # Calendar Application for Communication Tracking
 
@@ -8,7 +6,7 @@ The **Calendar Application for Communication Tracking** is a web-based tool desi
 
 ## Deployment
 You can access the live application here:
-[Calendar Application](https://calendar-application-for-communication-track-iasnavaps-projects.vercel.app/)
+[Calendar Application](https://entnt123.vercel.app/)
 
 ## Features
 - **Dynamic Calendar Views**: View events and communication schedules.
