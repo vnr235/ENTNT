@@ -16,12 +16,12 @@ const UserTableView = ({ userId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/companies");
+        const response = await axios.get("https://entnt-uz4q.onrender.com/api/companies");
         const companiesData = response.data;
 
         const meetingPromises = companiesData.map(async (company) => {
           const meetingResponse = await axios.get(
-            `http://localhost:5000/api/communications/${company._id}/meetings`
+            `https://entnt-uz4q.onrender.com/api/communications/${company._id}/meetings`
           );
           return { [company._id]: meetingResponse.data };
         });
